@@ -5,143 +5,235 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hostel Assistant Chatbot</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #fef6f0;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
-    .chat-container {
-        width: 400px;
-        max-width: 95%;
-        background-color: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
-
-    .chat-header {
-        background-color: #ffd6d6;
-        padding: 15px;
-        text-align: center;
-        font-weight: bold;
-        font-size: 1.2em;
-    }
-
-    .chat-messages {
-        flex: 1;
-        padding: 15px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .message {
-        padding: 10px 15px;
-        border-radius: 15px;
-        max-width: 80%;
-        word-wrap: break-word;
-    }
-
-    .user-msg {
-        align-self: flex-end;
-        background-color: #c6f6d5;
-    }
-
-    .bot-msg {
-        align-self: flex-start;
-        background-color: #fce1f0;
-    }
-
-    .chat-input {
-        display: flex;
-        padding: 10px;
-        border-top: 1px solid #ddd;
-        background-color: #fff5f5;
-    }
-
-    .chat-input input {
-        flex: 1;
-        padding: 10px 15px;
-        border-radius: 20px;
-        border: 1px solid #ddd;
-        outline: none;
-    }
-
-    .chat-input button {
-        padding: 10px 15px;
-        margin-left: 10px;
-        border: none;
-        border-radius: 20px;
-        background-color: #ffd6d6;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    .chat-input button:hover {
-        background-color: #ffb3b3;
-    }
-
-    .chat-messages::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .chat-messages::-webkit-scrollbar-thumb {
-        background-color: #ffc1c1;
-        border-radius: 3px;
-    }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fef6f0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20px;
+}
+.chat-container {
+    width: 400px;
+    max-width: 95%;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.chat-header {
+    background: #ffd6d6;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+.notice-board {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px;
+    background: #fff1f3;
+    gap: 10px;
+}
+.notice {
+    min-width: 150px;
+    background: #ffe0e0;
+    padding: 10px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    font-size: 0.9em;
+}
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #fff;
+}
+.message {
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+.user-msg {
+    align-self: flex-end;
+    background: #c6f6d5;
+}
+.bot-msg {
+    align-self: flex-start;
+    background: #fce1f0;
+}
+.chat-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background: #fff5f5;
+}
+.chat-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+.chat-input button {
+    padding: 10px 15px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 20px;
+    background: #ffd6d6;
+    cursor: pointer;
+    font-weight: bold;
+}
+.chat-input button:hover {
+    background: #ffb3b3;
+}
+.quick-info {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: #fff3f0;
+    overflow-x: auto;
+}
+.info-card {
+    min-width: 100px;
+    background: #ffe0d6;
+    padding: 10px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    font-size: 0.9em;
+    text-align: center;
+}
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #ffc1c1;
+    border-radius: 3px;
+}
 </style>
 </head>
 <body>
 
 <div class="chat-container">
     <div class="chat-header">🏡 Hostel Assistant</div>
+
+    <div class="notice-board" id="noticeBoard">
+        <div class="notice">Mess menu updated!</div>
+        <div class="notice">Room inspections on Saturday 11 AM</div>
+        <div class="notice">Water maintenance: 2–4 PM today</div>
+        <div class="notice">Hostel event this Friday</div>
+    </div>
+
     <div class="chat-messages" id="chatMessages">
         <div class="bot-msg">Hello! I am your Hostel Assistant. Ask me anything.</div>
     </div>
+
     <div class="chat-input">
         <input type="text" id="userInput" placeholder="Type your message...">
         <button onclick="sendMessage()">Send</button>
     </div>
+
+    <div class="quick-info" id="quickInfo">
+        <div class="info-card">Warden Contact</div>
+        <div class="info-card">Mess Timings</div>
+        <div class="info-card">Wi-Fi Info</div>
+        <div class="info-card">Laundry</div>
+    </div>
 </div>
 
 <script>
-    const chatMessages = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
+const chatMessages = document.getElementById('chatMessages');
+const userInput = document.getElementById('userInput');
 
-    function appendMessage(text, className) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${className}`;
-        msgDiv.textContent = text;
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+// ---------------- QA PAIRS ----------------
+const QA_PAIRS = [
+    ["check-in check-out", "Check-in is from 12:00 PM, and check-out is by 11:00 AM."],
+    ["hostel office location", "The warden’s office is on Ground Floor, Block A. Office hours: 8 AM to 6 PM."],
+    ["visiting hours", "Visitors allowed weekdays 5–7 PM, Sundays 10 AM–1 PM."],
+    ["overnight visitors", "Overnight stays for visitors are not permitted."],
+    ["wifi", "Yes, free high-speed Wi-Fi: 'HostelWiFi2024'."],
+    ["warden contact", "Reach Ms. Priya Sharma at +91 98xxxxxx01."],
+    ["security", "Security is available 24x7: 9876543210."],
+    ["floors", "Hostel has 4 floors and 150 rooms."],
+    ["curfew", "Gate closes at 10:00 PM for safety."],
+    ["nearest hospital", "City General Hospital is 2 km away."]
+    // Add more pairs as needed
+];
+
+// -------- Utility: Fuzzy Match ----------
+function findBestMatch(input){
+    input = input.toLowerCase();
+    let bestScore = 0;
+    let bestAnswer = null;
+    for(const [q,a] of QA_PAIRS){
+        let score = similarity(input,q);
+        if(score > bestScore){
+            bestScore = score;
+            bestAnswer = a;
+        }
     }
+    if(bestScore < 0.45) return "Your query has been recorded and will be sorted out soon.";
+    return bestAnswer;
+}
 
-    function sendMessage() {
-        const message = userInput.value.trim();
-        if (!message) return;
-
-        appendMessage(message, 'user-msg');
-        userInput.value = '';
-
-        // Placeholder response logic
-        let botResponse = "Your query has been recorded and will be sorted out soon.";
-        if (message.toLowerCase().includes("wifi")) botResponse = "Yes, free high-speed Wi-Fi is available.";
-        if (message.toLowerCase().includes("check-in")) botResponse = "Check-in is from 12:00 PM, and check-out is by 11:00 AM.";
-        appendMessage(botResponse, 'bot-msg');
+// Similarity function
+function similarity(s1, s2){
+    let longer = s1.length > s2.length ? s1 : s2;
+    let shorter = s1.length > s2.length ? s2 : s1;
+    let longerLength = longer.length;
+    if(longerLength == 0) return 1.0;
+    return (longerLength - editDistance(longer,shorter))/parseFloat(longerLength);
+}
+function editDistance(s1, s2){
+    s1 = s1.toLowerCase(); s2 = s2.toLowerCase();
+    const costs = [];
+    for(let i=0;i<=s1.length;i++){
+        let lastValue = i;
+        for(let j=0;j<=s2.length;j++){
+            if(i==0) costs[j] = j;
+            else{
+                if(j>0){
+                    let newValue = costs[j-1];
+                    if(s1.charAt(i-1)!=s2.charAt(j-1)) newValue = Math.min(Math.min(newValue,lastValue),costs[j])+1;
+                    costs[j-1] = lastValue;
+                    lastValue = newValue;
+                }
+            }
+        }
+        if(i>0) costs[s2.length] = lastValue;
     }
+    return costs[s2.length];
+}
 
-    // Allow Enter key to send message
-    userInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') sendMessage();
-    });
+// -------- Send Message ----------
+function appendMessage(text,className){
+    const div = document.createElement('div');
+    div.className = `message ${className}`;
+    div.textContent = text;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function sendMessage(){
+    const message = userInput.value.trim();
+    if(!message) return;
+    appendMessage(message,'user-msg');
+    userInput.value = '';
+    const response = findBestMatch(message);
+    appendMessage(response,'bot-msg');
+}
+
+// Enter key sends message
+userInput.addEventListener('keypress',e=>{
+    if(e.key==='Enter') sendMessage();
+});
 </script>
 
 </body>
